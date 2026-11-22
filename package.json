@@ -1,0 +1,98 @@
+{
+  "name": "kodezon-remote-chat",
+  "displayName": "KodeZon Remote Chat",
+  "description": "Remote chat approval system with embedded web server for mobile notifications",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "kodezon-remote-chat.openNotificationPanel",
+        "title": "Open Remote Chat Notifications",
+        "category": "KodeZon Remote Chat"
+      },
+      {
+        "command": "kodezon-remote-chat.openSettings",
+        "title": "Open Remote Chat Settings",
+        "category": "KodeZon Remote Chat"
+      },
+      {
+        "command": "kodezon-remote-chat.testNotification",
+        "title": "Test Notification",
+        "category": "KodeZon Remote Chat"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "kodezon-remote-chat-container",
+          "title": "KodeZon Remote Chat",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "kodezon-remote-chat-container": [
+        {
+          "id": "kodezon-remote-chat-status",
+          "name": "Status",
+          "type": "webview"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "KodeZon Remote Chat",
+      "properties": {
+        "kodezon-remote-chat.serverPort": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 1024,
+          "maximum": 65535,
+          "description": "Port for embedded web server (1024-65535)"
+        },
+        "kodezon-remote-chat.autoNotify": {
+          "type": "boolean",
+          "default": true,
+          "description": "Auto-send notifications when requests arrive"
+        },
+        "kodezon-remote-chat.pollInterval": {
+          "type": "number",
+          "default": 2000,
+          "description": "Polling interval for checking new requests (ms)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "esbuild": "^0.19.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.0",
+    "axios": "^1.6.0",
+    "@types/express": "^4.17.0"
+  }
+}
